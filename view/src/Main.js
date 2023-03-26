@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import Head from './components/Head';
-import Body from './components/Body';
+import Body from './components/calendar/Body';
 
 const Main = () => {
     let DATE = new Date();
@@ -22,8 +22,6 @@ const Main = () => {
             setYear(year - 1);
             setMonth(12);
         }
-
-        console.log("year:", year, "month:", m);
 
         let PVLastDate = new Date(year, m - 1, 0).getDate();
         let PVLastDay = new Date(year, m - 1, 0).getDay();
@@ -51,7 +49,6 @@ const Main = () => {
         let TD = [];
 
         TD = [...Array(ThisLasyDate + 1).keys()].slice(1);
-
         return PVLD.concat(TD, TLD);
     };
 

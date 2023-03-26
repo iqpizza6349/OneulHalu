@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Modal from './Modal';
 
 const Dates = (props) => {
     const { lastDate, firstDate, elm, findToday, month, year, idx, holiday } =
@@ -21,8 +21,9 @@ const Dates = (props) => {
     return (
         <>
             <Form
-                onDoubleClick={() => {
-                    setOpenModal(true);
+                onClick={() => {
+                    console.log('move');
+                    navigate.push("/happy");
                 }}
             >
                 <DateNum
@@ -33,18 +34,6 @@ const Dates = (props) => {
                 >
                     <TodayCSS findToday={findToday}>{elm}</TodayCSS>일
                 </DateNum>
-                {openModal && (
-                    <Modal
-                        elm={elm}
-                        month={month}
-                        year={year}
-                        registEvent={registEvent}
-                        setOpenModal={setOpenModal}
-                        openModal={openModal}
-                        userInput={userInput}
-                        setUserInput={setUserInput}
-                    />
-                )}
                 {holiday !== undefined && (
                     
                     <Holidays>
