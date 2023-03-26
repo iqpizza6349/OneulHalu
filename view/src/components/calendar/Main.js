@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import Head from './components/Head';
-import Body from './components/calendar/Body';
+import Head from './Head';
+import Body from './Body';
 
 const Main = () => {
     let DATE = new Date();

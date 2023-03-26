@@ -1,11 +1,12 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Dates = (props) => {
     const { lastDate, firstDate, elm, findToday, month, year, idx, holiday } =
         props;
+    const navigate = useNavigate();
 
     const [userInput, setUserInput] = useState({});
     const [evtList, setEvtList] = useState([]);
@@ -23,7 +24,7 @@ const Dates = (props) => {
             <Form
                 onClick={() => {
                     console.log('move');
-                    navigate.push("/happy");
+                    navigate(`/diary?year=${year}&month=${month}&date=${elm}`);
                 }}
             >
                 <DateNum

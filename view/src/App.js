@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Diary from './components/diary/Diary';
-import Calendar from './Calendar';
+import Calendar from './components/calendar/Calendar';
 
 const App = () => {
     return (
