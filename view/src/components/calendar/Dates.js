@@ -33,7 +33,7 @@ const Dates = (props) => {
                     firstDate={firstDate}
                     findToday={findToday}
                 >
-                    <TodayCSS findToday={findToday}>{elm}</TodayCSS>일
+                    {elm}일
                 </DateNum>
                 {holiday !== undefined && (
                     
@@ -97,19 +97,6 @@ const DateNum = styled.div`
     `
     color: #969696;
   `};
-`;
-
-const TodayCSS = styled.span`
-  ${(props) =>
-    props.findToday &&
-    ` position: relative;
-    padding: .5vw;
-    border-radius: 50%;
-    font-size: 1.2vw;
-    font-weight: 700;
-    color: #FFFFFF;
-    background-color:red
- `}
 `;
 
 const Lists = styled.div`

@@ -2,6 +2,7 @@ import '../styles/Button.css';
 
 const DiaryButton = ({ text, type, onClick }) => {
 
+    // eslint-disable-next-line
     const buttonType = ['positive', 'negative'].includes(type ? type : 'default');
 
     return (

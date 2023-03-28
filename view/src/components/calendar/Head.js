@@ -29,7 +29,7 @@ const Head = (props) => {
 const Form = styled.section`
   display: flex;
   flex-direction: column;
-  width: 100vw;
+  width: 31.3vw;
   border: 2px solid #e4e3e6;
   border-radius: 2px;
 `;
