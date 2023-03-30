@@ -2,6 +2,7 @@ package me.iqpizza6349.oneulhaluserver.domain.diary.service;
 
 import lombok.RequiredArgsConstructor;
 import me.iqpizza6349.oneulhaluserver.domain.diary.dao.DiaryMapper;
+import me.iqpizza6349.oneulhaluserver.domain.diary.dto.DiaryCreateRequest;
 import me.iqpizza6349.oneulhaluserver.domain.diary.entity.Diary;
 import me.iqpizza6349.oneulhaluserver.domain.member.entity.Member;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,18 @@ public class DiaryService {
         System.out.println(start);
         System.out.println(end);
         return diaryMapper.findAll(member, start.toString(), end.toString());
+    }
+
+    public void saveDiary(final Member member, final DiaryCreateRequest createRequest) {
+        diaryMapper.saveDiary(createRequest.toDomain(member));
+    }
+
+    public Diary findDiaryById(final String no) {
+        return diaryMapper.findDiary(no)
+                .orElseThrow(Diary.DiaryNotFoundException::new);
+    }
+
+    public void deleteDiary(final String no) {
+        diaryMapper.deleteDiary(no);
     }
 }

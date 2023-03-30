@@ -5,13 +5,13 @@
 <mapper namespace="me.iqpizza6349.oneulhaluserver.domain.diary.dao.DiaryMapper">
     <insert id="saveDiary" parameterType="me.iqpizza6349.oneulhaluserver.domain.diary.entity.Diary" useGeneratedKeys="true" keyProperty="id">
         insert into diary(
-          diary_no, author_id, title, content, emoji, wrote_date
+          diary_no, author_id, content, emoji, wrote_date
         ) values (
-          #{diaryNo}, #{authorId}, #{title}, #{context}, #{emoji}, #{wroteDate}
+          #{diaryNo}, #{authorId}, #{context}, #{emoji}, #{wroteDate}
         )
     </insert>
     <select id="findAll" parameterType="map" resultType="me.iqpizza6349.oneulhaluserver.domain.diary.entity.Diary">
-        select diary_no as diaryNo, author_id as authorId, title, content,
+        select diary_no as diaryNo, author_id as authorId, content,
                emoji, wrote_date as wroteDate
         from diary
         where author_id = #{member.id}
@@ -20,4 +20,13 @@
            and wrote_date <= str_to_date(#{end}, '%Y-%m-%d')
         ]]>
     </select>
+    <select id="findDiary" parameterType="java.lang.String" resultType="me.iqpizza6349.oneulhaluserver.domain.diary.entity.Diary">
+        select diary_no as diaryNo, author_id as authorId, content,
+               emoji, wrote_date as wroteDate
+        from diary
+        where diary_no = #{id}
+    </select>
+    <delete id="deleteDiary" parameterType="java.lang.String">
+        delete from diary where diary_no = #{id}
+    </delete>
 </mapper>
