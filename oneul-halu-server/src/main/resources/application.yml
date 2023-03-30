@@ -6,6 +6,20 @@ spring:
     password: ${PASSWORD}
     generate-unique-name: false
     driver-class-name: com.mysql.cj.jdbc.Driver
+#  sql:
+#    init:
+#      mode: always
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/**/**.xml
+
+jwt:
+  secret: $2$10qwjiorbui2GNFMEWFSIwqwufb24ighU99R32HR78O7qwifh98h1840th
+  refresh-secret: $2$10FEWBJKMNJOKWFIOqR3IH293T4HU39GQ4U83CN281u3rh24fnufe
+  expiration-second: 36000000
+
+cipher:
+  algorithm: AES/CBC/PKCS5Padding
+  key: WOWILOVEIT
+  hash: WOW
+  iv: AAAABBBBCCCCDDDD

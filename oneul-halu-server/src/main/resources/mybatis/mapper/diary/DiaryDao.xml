@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.iqpizza6349.oneulhaluserver.domain.diary.dao.DiaryMapper">
+    <insert id="saveDiary" parameterType="me.iqpizza6349.oneulhaluserver.domain.diary.entity.Diary" useGeneratedKeys="true" keyProperty="id">
+        insert into diary(
+          diary_no, author_id, title, content, emoji, wrote_date
+        ) values (
+          #{diaryNo}, #{authorId}, #{title}, #{context}, #{emoji}, #{wroteDate}
+        )
+    </insert>
+    <select id="findAll" parameterType="map" resultType="me.iqpizza6349.oneulhaluserver.domain.diary.entity.Diary">
+        select diary_no as diaryNo, author_id as authorId, title, content,
+               emoji, wrote_date as wroteDate
+        from diary
+        where author_id = #{member.id}
+        <![CDATA[
+           and wrote_date >= str_to_date(#{start}, '%Y-%m-%d')
+           and wrote_date <= str_to_date(#{end}, '%Y-%m-%d')
+        ]]>
+    </select>
+</mapper>
