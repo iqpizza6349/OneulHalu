@@ -5,20 +5,21 @@
 <mapper namespace="me.iqpizza6349.oneulhaluserver.domain.member.dao.MemberMapper">
     <insert id="saveMember" parameterType="me.iqpizza6349.oneulhaluserver.domain.member.entity.Member" useGeneratedKeys="true" keyProperty="id">
         insert into member(
-               member_id, name, password
+               member_id, email, name, password
         ) values (
             DEFAULT,
+            #{email},
             #{name},
             #{password}
         )
     </insert>
-    <select id="findMemberByUsername" parameterType="java.lang.String" resultType="me.iqpizza6349.oneulhaluserver.domain.member.entity.Member">
-        select member_id as id, name, password
+    <select id="findMemberByEmail" parameterType="java.lang.String" resultType="me.iqpizza6349.oneulhaluserver.domain.member.entity.Member">
+        select member_id as id, email, name, password
         from member
-        where name = #{name}
+        where email = #{email}
     </select>
     <select id="findMemberById" parameterType="java.lang.Long" resultType="me.iqpizza6349.oneulhaluserver.domain.member.entity.Member">
-        select member_id as id, name, password
+        select member_id as id, email, name, password
         from member
         where member_id = #{id}
     </select>

@@ -12,6 +12,6 @@ public interface MemberMapper {
 
     Optional<Member> findMemberById(long id);
 
-    Optional<Member> findMemberByUsername(String username);
+    Optional<Member> findMemberByEmail(String email);
 
 }
