@@ -14,6 +14,9 @@ public class Member {
     private long id;
 
     @SecurityField
+    private String email;
+
+    @SecurityField
     private String name;
 
     @SecurityField
