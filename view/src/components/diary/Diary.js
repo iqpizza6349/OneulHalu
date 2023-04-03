@@ -1,5 +1,6 @@
 import React from 'react';
-import NewDiary from './NewDiary';
+
+import DiaryEditor from './view/DiaryEditor';
 
 const Diary = () => {
   const location = window.location;
@@ -14,7 +15,9 @@ const Diary = () => {
   };
 
   return (
-    <NewDiary date={getDate()}/>
+    <>
+      <DiaryEditor originDate={getDate()}/>
+    </>
   );
 };
 

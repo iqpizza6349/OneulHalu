@@ -1,30 +1,30 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { Emotion } from '../diary/component/Emotion';
+
+import './styles/Body.css';
+
 const Dates = (props) => {
-    const { lastDate, firstDate, elm, findToday, month, year, idx, holiday } =
+    const { lastDate, firstDate, elm, findToday, month, year, idx, diary } =
         props;
     const navigate = useNavigate();
-
-    const [userInput, setUserInput] = useState({});
-    const [evtList, setEvtList] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
-    
-    let dateKey = `${month}` + `${elm}`;
-    const registEvent = (value) => {
-        setEvtList([...evtList, value]);
-        setUserInput('');
-        setOpenModal(false);
-    };
 
     return (
         <>
             <Form
                 onClick={() => {
-                    console.log('move');
-                    navigate(`/diary?year=${year}&month=${month}&date=${elm}`);
+                    if (props.idx < props.lastDate) {
+                        return false;
+                    }
+                    else if (props.firstDate > 0 && props.idx > props.firstDate - 1) {
+                        return false;
+                    }
+                    else {
+                        navigate(`/diary?year=${year}&month=${month}&date=${elm}`);
+                    }
                 }}
             >
                 <DateNum
@@ -35,39 +35,16 @@ const Dates = (props) => {
                 >
                     {elm}일
                 </DateNum>
-                {holiday !== undefined && (
-                    
-                    <Holidays>
-                        {holiday.map((evt, index) => {
-                            let key =
-                                elm.length < 2
-                                    ? `${year}` + `${month}` + `${elm}`
-                                    : `${year}` + `${month}` + '0' + `${elm}`;
-                            return (
-                                Number(key) === evt.locdate && (
-                                    <Holiday key={index}>{evt.dateName}</Holiday>
+                {diary && (
+                    <>
+                        {Emotion.map((it) => {
+                            if (it.emotion_id === diary.emoji) {
+                                return (
+                                    <img key={idx} src={it.emotion_img} alt={it.emotion_descript} />
                                 )
-                            );
+                            }
                         })}
-                    </Holidays>
-                )}
-                {Boolean(evtList[0]) && (
-                    <Lists>
-                        {evtList.map((list, index) => {
-                            return (
-                                list.slice(0, list.indexOf('_')) === dateKey && (
-                                    <List
-                                        key={index}
-                                        onClick={() => {
-                                            setOpenModal(true);
-                                        }}
-                                    >
-                                        {list.slice(list.indexOf('_') + 1, list.length)}
-                                    </List>
-                                )
-                            );
-                        })}
-                    </Lists>
+                    </>
                 )}
             </Form>
         </>
@@ -97,31 +74,6 @@ const DateNum = styled.div`
     `
     color: #969696;
   `};
-`;
-
-const Lists = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-`;
-const List = styled.span`
-  margin-top: 0.3vw;
-  padding-left: 0.5vw;
-  background-color: #f7ced9;
-  border-radius: 5px;
-`;
-const Holidays = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-`;
-const Holiday = styled.div`
-  margin-top: 0.3vw;
-  padding-left: 0.5vw;
-  color: red;
-  font-weight: 700;
-  background-color: skyblue;
-  border-radius: 5px;
 `;
 
 export default Dates;

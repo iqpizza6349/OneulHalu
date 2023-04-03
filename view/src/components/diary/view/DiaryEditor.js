@@ -1,21 +1,27 @@
+/* eslint-disable */
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import DiaryHeader from '../component/DiaryHeader';
 import DiaryButton from '../component/DiaryButton';
 import EmotionItem from '../component/EmotionItem';
 
-import "../styles/DiaryEditor.css";
+import { post, patch, getWithHeaders } from '../../../lib/requestUtils';
 
-const DiaryEditor = ({ originDate, isEdit }) => {
+import "../styles/DiaryEditor.css";
+import { Emotion } from '../component/Emotion';
+
+const DiaryEditor = ({ originDate }) => {
     const [date, setDate] = useState();
     const [emotion, setEmotion] = useState(3);
     const contentRef = useRef();
     const [content, setContent] = useState("");
+    const [isEdit, setEdit] = useState(false);
+    const [diaryNo, setDiaryNo] = useState();
+
     const navigate = useNavigate();
     
     const getStringDate = (date) => {
-        console.log(date);
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
         let day = date.getDate();
@@ -39,39 +45,76 @@ const DiaryEditor = ({ originDate, isEdit }) => {
             return;
         }
 
+        let d = date ? getStringDate(date) : getStringDate(originDate);
+        let token = `Bearer ${window.sessionStorage.getItem("Authorization")}`;
+        if (diaryNo) {
+            patch(`/diaries/${diaryNo}`, {
+                content: content,
+                emoji: emotion
+            }, {
+                Authorization: token
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        }
+        else {
+            post('/diaries', {
+                content: content,
+                wrote_at: d,
+                emoji: emotion
+            }, {
+                Authorization: token
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        }
         
+        navigate("/", { replace: true });
     }
 
-    const env = process.env;
-    env.PUBLIC_URL = env.PUBLIC_URL || "";
+    const findDiary = async (date) => {
+        let year = Number(date.substring(0, 4));
+        let month = Number(date.substring(5, 7));
+        let day = Number(date.substring(8, 10));
 
-    const emotionList = [
-        {
-            emotion_id: 1,
-            emotion_img: process.env.PUBLIC_URL + `/emoji/매우_좋음.png`,
-            emotion_descript: '신남'
-        },
-        {
-            emotion_id: 2,
-            emotion_img: process.env.PUBLIC_URL + `/emoji/좋음.png`,
-            emotion_descript: '좋음'
-        },
-        {
-            emotion_id: 3,
-            emotion_img: process.env.PUBLIC_URL + `/emoji/보통.png`,
-            emotion_descript: '보통'
-        },
-        {
-            emotion_id: 4,
-            emotion_img: process.env.PUBLIC_URL + `/emoji/나쁨.png`,
-            emotion_descript: '나쁨'
-        },
-        {
-            emotion_id: 5,
-            emotion_img: process.env.PUBLIC_URL + `/emoji/매우_나쁨.png`,
-            emotion_descript: '끔찍'
-        }
-    ];
+        getWithHeaders(
+            `/diaries/diary?year=${year}&month=${month}&day=${day}`,
+            {
+                Authorization: `Bearer ${window.sessionStorage.getItem("Authorization")}`
+            }
+        )
+        .then((response) => {
+            setDiaryNo(response.data.diaryNo);
+            getWithHeaders(
+                `/diaries/${response.data.diaryNo}`,
+                {
+                    Authorization: `Bearer ${window.sessionStorage.getItem("Authorization")}`
+                }
+            )
+            .then((res) => {
+                setEdit(true);
+                setContent(res.data.content);
+                setEmotion(res.data.emoji);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+    };
+
+    const runAxios = async () => {
+        const d = date ? getStringDate(date) : getStringDate(originDate);
+        await findDiary(d);
+    }
+
+    useEffect(() => {
+        runAxios();
+    }, []);
 
     return (
         <div>
@@ -99,7 +142,7 @@ const DiaryEditor = ({ originDate, isEdit }) => {
                 <section>
                     <h4>오늘의 감정</h4>
                     <div className="input_box emotion_list_wrapper">
-                        {emotionList.map((it) => (
+                        {Emotion.map((it) => (
                             <EmotionItem onClick={handleClickEmote}
                                         key={it.emotion_id}
                                         {...it}
@@ -122,7 +165,7 @@ const DiaryEditor = ({ originDate, isEdit }) => {
                     <div className="control_box">
                         <DiaryButton text={"취소하기"} onClick={() => navigate(-1)} />
                         <DiaryButton
-                            text={"작성완료"}
+                            text={isEdit ? "수정완료" : "작성완료"}
                             type={"positive"}
                             onClick={handleSubmit} />
                     </div>
@@ -130,10 +173,6 @@ const DiaryEditor = ({ originDate, isEdit }) => {
             </div>
         </div>
     );
-};
-
-DiaryEditor.defaultProps = {
-    isEdit: false
 };
 
 export default DiaryEditor;
