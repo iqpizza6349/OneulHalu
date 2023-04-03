@@ -61,7 +61,12 @@ public class DiaryService {
         throw new Diary.DiaryNotFoundException();
     }
 
-    public void deleteDiary(final String no) {
-        diaryMapper.deleteDiary(no);
+    public void deleteDiary(final Member member, final String no) {
+        if (diaryMapper.existsDiaryByAuthor(member, no)) {
+            diaryMapper.deleteDiary(no);
+            return;
+        }
+
+        throw new Diary.DiaryNotFoundException();
     }
 }

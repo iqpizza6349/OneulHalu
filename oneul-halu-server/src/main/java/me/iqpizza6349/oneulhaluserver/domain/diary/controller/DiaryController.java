@@ -62,6 +62,6 @@ public class DiaryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDiary(@RequestAttribute Member member,
                             @RequestParam String no) {
-        diaryService.deleteDiary(no);
+        diaryService.deleteDiary(member, no);
     }
 }
