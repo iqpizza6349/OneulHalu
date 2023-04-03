@@ -7,10 +7,10 @@ import org.swcns.reflectivecipher.annotation.SecurityField;
 
 @Getter
 @AllArgsConstructor @NoArgsConstructor
-public class MemberRequest {
+public class MemberLoginRequest {
 
     @SecurityField
-    private String username;
+    private String email;
 
     @SecurityField
     private String password;
