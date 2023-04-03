@@ -3,6 +3,7 @@ package me.iqpizza6349.oneulhaluserver.domain.diary.controller;
 import lombok.RequiredArgsConstructor;
 import me.iqpizza6349.oneulhaluserver.domain.diary.dto.DiaryCreateRequest;
 import me.iqpizza6349.oneulhaluserver.domain.diary.dto.DiaryListResponse;
+import me.iqpizza6349.oneulhaluserver.domain.diary.dto.DiaryModifyRequest;
 import me.iqpizza6349.oneulhaluserver.domain.diary.entity.Diary;
 import me.iqpizza6349.oneulhaluserver.domain.diary.service.DiaryService;
 import me.iqpizza6349.oneulhaluserver.domain.member.entity.Member;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/diary")
+@RequestMapping("/diaries")
 public class DiaryController {
 
     private final DiaryService diaryService;
@@ -22,8 +23,16 @@ public class DiaryController {
     public DiaryListResponse diaries(@RequestAttribute Member member,
                                @RequestParam int year,
                                @RequestParam int month) {
-        System.out.println(member.getId());
         return new DiaryListResponse(diaryService.diaries(member, year, month));
+    }
+
+    @AuthToken
+    @GetMapping("/diary")
+    public Diary diary(@RequestAttribute Member member,
+                       @RequestParam int year,
+                       @RequestParam int month,
+                       @RequestParam int day) {
+        return diaryService.diary(member, year, month, day);
     }
 
     @GetMapping("/{no}")
@@ -37,6 +46,15 @@ public class DiaryController {
     public void createDiary(@RequestAttribute Member member,
                             @RequestBody DiaryCreateRequest request) {
         diaryService.saveDiary(member, request);
+    }
+
+    @AuthToken
+    @PatchMapping("/{no}")
+    @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
+    public void updateDiary(@RequestAttribute Member member,
+                             @PathVariable String no,
+                             @RequestBody DiaryModifyRequest modifyRequest) {
+        diaryService.updateDiary(member, no, modifyRequest);
     }
 
     @AuthToken
