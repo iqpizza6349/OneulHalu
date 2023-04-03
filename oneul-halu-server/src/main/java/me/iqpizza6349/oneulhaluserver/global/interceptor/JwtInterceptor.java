@@ -39,7 +39,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         Member member = memberMapper.findMemberById(Long.parseLong(id))
                 .orElseThrow(Member.MemberNotFoundException::new);
-        System.out.println(member);
         request.setAttribute("member", member);
         return true;
     }
