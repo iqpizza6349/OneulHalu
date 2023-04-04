@@ -60,6 +60,7 @@ public class DiaryController {
     @AuthToken
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
     public void deleteDiary(@RequestAttribute Member member,
                             @RequestParam String no) {
         diaryService.deleteDiary(member, no);

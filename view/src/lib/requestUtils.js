@@ -17,7 +17,6 @@ export const get = async (uri) => {
             requestOptions
         );
     } catch (err) {
-        console.error(err);
     }
 };
 
@@ -29,7 +28,6 @@ export const getWithHeaders = async (uri, headers) => {
             headers: headers
         });
     } catch (err) {
-        console.error(err);
     }
 };
 
@@ -50,7 +48,6 @@ const postWithoutHeaders = async (uri, body) => {
             data: body
         });
     } catch (err) {
-        console.error(err);
     }
 }
 
@@ -63,7 +60,6 @@ const postWithHeaders = async (uri, body, headers) => {
             headers: headers
         });
     } catch (err) {
-        console.error(err);
     }
 }
 
@@ -84,7 +80,6 @@ const patchWithoutHeaders = async (uri, body) => {
             data: body
         });
     } catch (err) {
-        console.error(err);
     }
 }
 
@@ -97,10 +92,37 @@ const patchWithHeaders = async (uri, body, headers) => {
             headers: headers
         });
     } catch (err) {
-        console.error(err);
     }
 }
 
+export const deleteRequest = async (uri, body, headers) => {
+    if (headers) {
+        return deleteWithHeaders(uri, body, headers);
+    }
+    else {
+        return deleteWithoutHeaders(uri, body);
+    }
+};
 
+const deleteWithoutHeaders = async (uri, body) => {
+    try {
+        return await axios({
+            url: BASE_URL + uri,
+            method: 'delete'
+        });
+    } catch (err) {
+    }
+}
+
+const deleteWithHeaders = async (uri, body, headers) => {
+    try {
+        return await axios({
+            url: BASE_URL + uri,
+            method: 'delete',
+            headers: headers
+        });
+    } catch (err) {
+    }
+}
 
 

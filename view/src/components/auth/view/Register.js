@@ -12,7 +12,7 @@ class Register extends Component {
         email: "",
         username: "",
         password: "",
-        passwordComfirm: ""
+        passwordConfirm: ""
     };
 
     handleChnage = e => {
@@ -22,20 +22,25 @@ class Register extends Component {
     };
 
     handleClick = e => {
-        if (this.state.password !== this.state.passwordComfirm) {   
+        if (this.state.password !== this.state.passwordConfirm) {
             alert("비밀번호가 서로 일치하지 않습니다!");
         }
         else {
-            const res = post("/member/register", {
+            const res = post("/members/register", {
                 email: this.state.email,
                 username: this.state.username,
                 password: this.state.password
             });
             res.then(response => {
+                this.setState({
+                    email: "",
+                    username: "",
+                    password: "",
+                    passwordConfirm: ""
+                });
                 alert("회원가입이 성공적으로 이루어졌습니다!\n로그인을 진행해주세요!");
             })
-            .catch(err => {
-                console.error(err);
+            .catch(() => {
                 alert('이미 존재하는 이메일입니다!');
             })
         }

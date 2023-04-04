@@ -38,8 +38,7 @@ const Login = () => {
             navigate('/');
             window.location.reload();
         })
-        .catch(err => {
-            console.error(err);
+        .catch(() => {
             alert("비밀번호가 일치하지 않습니다.");
         });
     }

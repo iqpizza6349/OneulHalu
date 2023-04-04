@@ -38,8 +38,7 @@ const Body = (props) => {
                 setDiary((prev) => [...prev, d])
             }
         })
-        .catch((err) => {
-            console.error(err);
+        .catch(() => {
         });
     };
     

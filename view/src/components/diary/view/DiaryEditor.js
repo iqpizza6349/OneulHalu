@@ -6,7 +6,7 @@ import DiaryHeader from '../component/DiaryHeader';
 import DiaryButton from '../component/DiaryButton';
 import EmotionItem from '../component/EmotionItem';
 
-import { post, patch, getWithHeaders } from '../../../lib/requestUtils';
+import { post, patch, getWithHeaders, deleteRequest } from '../../../lib/requestUtils';
 
 import "../styles/DiaryEditor.css";
 import { Emotion } from '../component/Emotion';
@@ -39,6 +39,25 @@ const DiaryEditor = ({ originDate }) => {
         setEmotion(emotion);
     }
 
+    const handleDelete = () => {
+        let token = `Bearer ${window.sessionStorage.getItem("Authorization")}`;
+        if (diaryNo) {
+            deleteRequest(`/diaries?no=${diaryNo}`, {
+                content: content,
+                emoji: emotion
+            }, {
+                Authorization: token
+            })
+            .catch(() => {
+            });
+        }
+        goHome();
+    };
+
+    const goHome = () => {
+        navigate('/');
+    }
+
     const handleSubmit = () => {
         if (content.length < 1) {
             contentRef.current.focus();
@@ -54,8 +73,7 @@ const DiaryEditor = ({ originDate }) => {
             }, {
                 Authorization: token
             })
-            .catch((err) => {
-                console.error(err);
+            .catch(() => {
             })
         }
         else {
@@ -66,8 +84,7 @@ const DiaryEditor = ({ originDate }) => {
             }, {
                 Authorization: token
             })
-            .catch((err) => {
-                console.error(err);
+            .catch(() => {
             });
         }
         
@@ -98,13 +115,19 @@ const DiaryEditor = ({ originDate }) => {
                 setContent(res.data.content);
                 setEmotion(res.data.emoji);
             })
-            .catch((error) => {
-                console.error(error);
+            .catch(() => {
+                setEdit(false);
+                setContent("");
+                setEmotion(3);
+                setDiaryNo();
             });
         })
-        .catch((err) => {
-            console.error(err);
-        })
+        .catch(() => {
+            setEdit(false);
+            setContent("");
+            setEmotion(3);
+            setDiaryNo();
+        });
     };
 
     const runAxios = async () => {
@@ -120,7 +143,7 @@ const DiaryEditor = ({ originDate }) => {
         <div>
             <DiaryHeader
                 headText={isEdit ? "일기 수정하기" : "새 일기 쓰기"}
-                leftChild={<DiaryButton text={"< 뒤로가기"} onClick={() => navigate(-1)}/>}
+                leftChild={<DiaryButton text={"< 뒤로가기"} onClick={() => navigate('/')}/>}
             />
             <div className="DiaryEditor">
                 <section>
@@ -134,6 +157,8 @@ const DiaryEditor = ({ originDate }) => {
                                     let day = newDate.getDate();
                                     navigate(`/diary?year=${year}&month=${month}&date=${day}`);
                                     setDate(newDate);
+                                    runAxios();
+                                    window.location.reload();
                                 }}
                                 type={"date"}
                         />
@@ -163,7 +188,10 @@ const DiaryEditor = ({ originDate }) => {
                 </section>
                 <section>
                     <div className="control_box">
-                        <DiaryButton text={"취소하기"} onClick={() => navigate(-1)} />
+                        <DiaryButton text={isEdit ? "삭제하기" : "취소하기"}
+                            type={isEdit ? "negative" : "default"}
+                            onClick={isEdit ? handleDelete : goHome}
+                        />
                         <DiaryButton
                             text={isEdit ? "수정완료" : "작성완료"}
                             type={"positive"}
