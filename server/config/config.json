@@ -1,0 +1,9 @@
+{
+    "development": {
+        "username": "oneulhalu",
+        "password": "12345678",
+        "database": "oneul_halu_db",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    }
+}
