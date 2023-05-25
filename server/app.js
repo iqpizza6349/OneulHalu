@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 const database = require('./dao');
 
 const memberRouter = require('./routes/member');
+const diaryRouter = require('./routes/diary');
 
 dotenv.config();
 database.connectionTest();
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/members', memberRouter);
+app.use('/diaries', diaryRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
