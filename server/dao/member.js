@@ -32,6 +32,7 @@ exports.findByEmail = async (email) => {
                     resolve(member);
                 }
             );
+            close();
         });
     } catch (err) {
         console.error(err);
