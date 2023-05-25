@@ -56,7 +56,6 @@ const Body = (props) => {
             {totalDate.map((elm, idx) => {
                 let d = undefined;
                 for (let e of diary) {
-                    console.log(e);
                     if (idx < lastDate) {
                         continue;
                     }

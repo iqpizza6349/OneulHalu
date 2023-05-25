@@ -95,7 +95,6 @@ const DiaryEditor = ({ originDate }) => {
         let year = Number(date.substring(0, 4));
         let month = Number(date.substring(5, 7));
         let day = Number(date.substring(8, 10));
-        console.log(`${year}-${month}-${day}`);
 
         getWithHeaders(
             `/diaries/diary?year=${year}&month=${month}&day=${day}`,
