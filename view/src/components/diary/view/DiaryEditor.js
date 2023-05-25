@@ -95,6 +95,7 @@ const DiaryEditor = ({ originDate }) => {
         let year = Number(date.substring(0, 4));
         let month = Number(date.substring(5, 7));
         let day = Number(date.substring(8, 10));
+        console.log(`${year}-${month}-${day}`);
 
         getWithHeaders(
             `/diaries/diary?year=${year}&month=${month}&day=${day}`,
@@ -103,9 +104,18 @@ const DiaryEditor = ({ originDate }) => {
             }
         )
         .then((response) => {
-            setDiaryNo(response.data.diaryNo);
+            const obj = response.data;
+            if (obj.constructor === Object && Object.keys(obj).length === 0) {
+                setEdit(false);
+                setContent("");
+                setEmotion(3);
+                setDiaryNo();
+                return;
+            }
+
+            setDiaryNo(obj.diaryNo);
             getWithHeaders(
-                `/diaries/${response.data.diaryNo}`,
+                `/diaries/${obj.diaryNo}`,
                 {
                     Authorization: `Bearer ${window.sessionStorage.getItem("Authorization")}`
                 }

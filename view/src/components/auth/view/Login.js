@@ -32,7 +32,7 @@ const Login = () => {
         res.then(response => {
             window.sessionStorage.setItem(
                 "Authorization",
-                response.data.access_token
+                response.data.token
             );
             
             navigate('/');

@@ -25,11 +25,16 @@ const Body = (props) => {
             }
         );
         res.then((response) => {
+            if (response.status === 419) {
+                window.sessionStorage.clear();
+                return;
+            }
+
             const diaries = response.data.data.map((item) => {
                 return {
                     no: item.diaryNo,
-                    month: item.wroteDate[1],
-                    date: item.wroteDate[2],
+                    month: item.wroteDate.substring(5, 7),
+                    date: parseInt(item.wroteDate.substring(8, 10)) + 1,
                     emoji: item.emoji
                 };
             });
@@ -51,6 +56,7 @@ const Body = (props) => {
             {totalDate.map((elm, idx) => {
                 let d = undefined;
                 for (let e of diary) {
+                    console.log(e);
                     if (idx < lastDate) {
                         continue;
                     }
