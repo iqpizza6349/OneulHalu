@@ -22,7 +22,8 @@ exports.corsWhenDomainMatches = async (req, res, next) => {
 
 exports.verifyToken = (req, res, next) => {
     try {
-        res.locals.decoded = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
+        const token = req.headers.authorization;
+        res.locals.decoded = jwt.verify(token.substring(7), process.env.JWT_SECRET);
         return next();
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
@@ -31,6 +32,7 @@ exports.verifyToken = (req, res, next) => {
                 message: "토큰이 만료되었습니다."
             });
         }
+
         return res.status(401).json({
             code: 401,
             message: "유효하지 않은 토큰입니다."
