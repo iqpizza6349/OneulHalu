@@ -3,12 +3,19 @@ import styled from 'styled-components';
 
 const Head = (props) => {
     const { year, month, goToday, setMonth } = props;
+
+    const removeLoginInfo = () => {
+      window.sessionStorage.clear();
+      window.location.reload();
+    }
+
     return (
         <Form>
             <Nav>
                 <Year>
                     {year}년 {month}월
                 </Year>
+                <Btn width="4vw" onClick={() => removeLoginInfo()}>로그아웃</Btn>
                 <BtnBox>
                     <Btn onClick={() => setMonth(month - 1)}>&lt;</Btn>
                     <Btn width="3vw" onClick={() => goToday()}>
