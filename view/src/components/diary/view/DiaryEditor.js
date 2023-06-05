@@ -10,6 +10,7 @@ import { post, patch, getWithHeaders, deleteRequest } from '../../../lib/request
 
 import "../styles/DiaryEditor.css";
 import { Emotion } from '../component/Emotion';
+import axios from 'axios';
 
 const DiaryEditor = ({ originDate }) => {
     const [date, setDate] = useState();
@@ -18,8 +19,22 @@ const DiaryEditor = ({ originDate }) => {
     const [content, setContent] = useState("");
     const [isEdit, setEdit] = useState(false);
     const [diaryNo, setDiaryNo] = useState();
+    const [image, setImage] = useState(undefined);
 
     const navigate = useNavigate();
+
+    const uploadImage = (image) => {
+        const formData = new FormData();
+        formData.append("img", image);
+        let token = `Bearer ${window.sessionStorage.getItem("Authorization")}`;
+        axios.post("http://localhost:8080/diaries/img", formData, {
+            headers: {Authorization: token}
+        })
+        .then((res) => {
+            console.log(res);
+            setImage(res.data.url);
+        });
+    }
     
     const getStringDate = (date) => {
         let year = date.getFullYear();
@@ -67,14 +82,25 @@ const DiaryEditor = ({ originDate }) => {
         let d = date ? getStringDate(date) : getStringDate(originDate);
         let token = `Bearer ${window.sessionStorage.getItem("Authorization")}`;
         if (diaryNo) {
-            patch(`/diaries/${diaryNo}`, {
-                content: content,
-                emoji: emotion
-            }, {
-                Authorization: token
-            })
-            .catch(() => {
-            })
+            if (image) {
+                patch(`/diaries/${diaryNo}`, {
+                    content: content,
+                    emoji: emotion,
+                    url: image
+                }, {
+                    Authorization: token
+                })
+            }
+            else {
+                patch(`/diaries/${diaryNo}`, {
+                    content: content,
+                    emoji: emotion
+                }, {
+                    Authorization: token
+                })
+                .catch(() => {
+                })
+            }
         }
         else {
             post('/diaries', {
@@ -109,6 +135,7 @@ const DiaryEditor = ({ originDate }) => {
                 setContent("");
                 setEmotion(3);
                 setDiaryNo();
+                setImage(undefined);
                 return;
             }
 
@@ -123,12 +150,14 @@ const DiaryEditor = ({ originDate }) => {
                 setEdit(true);
                 setContent(res.data.content);
                 setEmotion(res.data.emoji);
+                setImage(res.data.image);
             })
             .catch(() => {
                 setEdit(false);
                 setContent("");
                 setEmotion(3);
                 setDiaryNo();
+                setImage(undefined);
             });
         })
         .catch(() => {
@@ -193,6 +222,16 @@ const DiaryEditor = ({ originDate }) => {
                                 ref={contentRef}
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)} />
+                    </div>
+                </section>
+                <section>
+                    <h4>사진 한 컷</h4>
+                    <div>
+                        <img src={`http://localhost:8080${image}`} style={{display: 'none'} && { width: 250 }} alt='미리보기'/>
+                    </div>
+                    <div className="input_box">
+                        <label id="image-label" for="img">사진 업로드</label>
+                        <input id="img" type="file" accept="image/*" onChange={(e) => uploadImage(e.target.files[0])}/>
                     </div>
                 </section>
                 <section>
