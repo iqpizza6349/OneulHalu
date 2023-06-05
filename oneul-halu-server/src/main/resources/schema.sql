@@ -14,5 +14,6 @@ create table diary (
     `content` text not null,
     `emoji` tinyint not null default 3,
     `wrote_date` date not null,
+    `image` varchar(200),
     foreign key (`author_id`) references member (`member_id`)
 );
