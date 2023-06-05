@@ -1,11 +1,11 @@
 const { connect, close } = require(".");
 const Diary = require('../models/Diary');
 
-exports.save = async (diaryNo, authorId, content, emoji, wroteDate) => {
+exports.save = async (diaryNo, authorId, content, emoji, wroteDate, image) => {
     const connection = await connect();
     connection.query(
-        `insert into diary (diary_no, author_id, content, emoji, wrote_date)
-        values ('${diaryNo}', ${authorId}, '${content}', ${emoji}, str_to_date('${wroteDate}', '%Y-%m-%d'))`
+        `insert into diary (diary_no, author_id, content, emoji, wrote_date, image)
+        values ('${diaryNo}', ${authorId}, '${content}', ${emoji}, str_to_date('${wroteDate}', '%Y-%m-%d'), '${image}')`
     );
     close();
 };
@@ -16,7 +16,7 @@ exports.findAllByAuthor = async (authorId, start, end) => {
         return new Promise((resolve, reject) => {
             connection.query(
                 `select diary_no as diaryNo, author_id as authorId, content,
-                        emoji, wrote_date as wroteDate
+                        emoji, wrote_date as wroteDate, image
                 from diary
                 where author_id = ${authorId}
                     and wrote_date >= str_to_date('${start}', '%Y-%m-%d')
@@ -35,7 +35,8 @@ exports.findAllByAuthor = async (authorId, start, end) => {
                             rows[i]?.authorId,
                             rows[i]?.content,
                             rows[i]?.emoji,
-                            rows[i]?.wroteDate
+                            rows[i]?.wroteDate,
+                            rows[i]?.image
                         ));
                     }
                     resolve(diaries);
@@ -55,7 +56,7 @@ exports.findByNo = async (no) => {
         return new Promise((resolve, reject) => {
             connection.query(
                 `select diary_no as diaryNo, author_id as authorId, content,
-                        emoji, wrote_date as wroteDate
+                        emoji, wrote_date as wroteDate, image
                 from diary
                 where diary_no = '${no}'`,
                 function (err, rows) {
@@ -70,7 +71,8 @@ exports.findByNo = async (no) => {
                         rows[0]?.authorId,
                         rows[0]?.content,
                         rows[0]?.emoji,
-                        rows[0]?.wroteDate
+                        rows[0]?.wroteDate,
+                        rows[0]?.image
                     );
                     resolve(diary);
                 }
@@ -88,7 +90,7 @@ exports.findDiary = async (authorId, date) => {
         return new Promise((resolve, reject) => {
             connection.query(
                 `select diary_no as diaryNo, author_id as authorId, content,
-                        emoji, wrote_date as wroteDate
+                        emoji, wrote_date as wroteDate, image
                 from diary
                 where author_id = ${authorId}
                         and wrote_date = str_to_date('${date}', '%Y-%m-%d')`,
@@ -104,7 +106,8 @@ exports.findDiary = async (authorId, date) => {
                         rows[0]?.authorId,
                         rows[0]?.content,
                         rows[0]?.emoji,
-                        rows[0]?.wroteDate
+                        rows[0]?.wroteDate,
+                        rows[0]?.image
                     );
                     resolve(diary);
                 }
@@ -127,8 +130,17 @@ exports.deleteByNo = async (no) => {
 exports.update = async (no, content, emoji) => {
     const connection = await connect();
     connection.query(
-        `update diary set content = '${content}', emoji = ${emoji}
-        where diary_no = '${no}`
+        `update diary set content = '${content.toString()}', emoji = ${emoji}
+        where diary_no = '${no}'`
+    )
+    close();
+};
+
+exports.updateWithImage = async (no, content, emoji, image) => {
+    const connection = await connect();
+    connection.query(
+        `update diary set content = '${content}', emoji = ${emoji}, image = '${image}'
+        where diary_no = '${no}'`
     )
     close();
 };

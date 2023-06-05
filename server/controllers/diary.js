@@ -1,6 +1,10 @@
-const { findAllByAuthor, findDiary, save, findByNo, exists, update, deleteByNo } = require('../dao/diary');
+const { findAllByAuthor, findDiary, save, findByNo, exists, update, deleteByNo, updateWithImage } = require('../dao/diary');
 
 const { v4 } = require('uuid');
+
+exports.afterUploadImage = (req, res) => {
+    res.json({ url: `/img/${req.file.filename}` });
+};
 
 exports.diaries = async (req, res, next) => {
     const member = res.locals.decoded;
@@ -29,7 +33,8 @@ exports.diary = async (req, res, next) => {
         authorId: diary.authorId,
         content: diary.content,
         emoji: diary.emoji,
-        wroteDate: diary.wroteDate
+        wroteDate: diary.wroteDate,
+        image: diary.image
     });
 };
 
@@ -40,7 +45,8 @@ exports.findDiary = async (req, res, next) => {
         authorId: diary.authorId,
         content: diary.content,
         emoji: diary.emoji,
-        wroteDate: diary.wroteDate
+        wroteDate: diary.wroteDate,
+        image: diary.image
     });
 }
 
@@ -50,7 +56,7 @@ exports.saveDiary = (req, res, next) => {
     const member = res.locals.decoded;
 
     const wrote = new Date(date.getFullYear(), date.getMonth() - 1, date.getDate() + 1);
-    save(v4(), member.id, content, emoji, wrote.toISOString().substring(0, 10));
+    save(v4(), member.id, content, emoji, wrote.toISOString().substring(0, 10), req.body.url);
     return res.status(201).json({
         message: "good"
     });
@@ -62,7 +68,13 @@ exports.updateDiary = (req, res, next) => {
     const no = req.params.no;
 
     if (exists(member.id, no)) {
-        update(no, content, emoji);
+        if (req.body.url) {
+            updateWithImage(no, content, emoji, req.body.url);
+        }
+        else {
+            update(no, content, emoji);
+        }
+
         return res.status(200).json({
             message: "complete"
         });
