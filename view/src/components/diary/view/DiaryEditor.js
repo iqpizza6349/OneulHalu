@@ -103,15 +103,29 @@ const DiaryEditor = ({ originDate }) => {
             }
         }
         else {
-            post('/diaries', {
-                content: content,
-                wrote_at: d,
-                emoji: emotion
-            }, {
-                Authorization: token
-            })
-            .catch(() => {
-            });
+            if (image) {
+                post('/diaries', {
+                    content: content,
+                    wrote_at: d,
+                    emoji: emotion,
+                    url: image
+                }, {
+                    Authorization: token
+                })
+                .catch(() => {
+                });
+            }
+            else {
+                post('/diaries', {
+                    content: content,
+                    wrote_at: d,
+                    emoji: emotion
+                }, {
+                    Authorization: token
+                })
+                .catch(() => {
+                });
+            }
         }
         
         navigate("/", { replace: true });
