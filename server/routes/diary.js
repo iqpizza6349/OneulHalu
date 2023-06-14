@@ -23,7 +23,7 @@ const upload = multer({
             cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
         }
     }),
-    limits: { fileSize: 5 * 1024 * 1024 }
+    limits: { fileSize: 20 * 1024 * 1024 }
 });
 
 router.use(corsWhenDomainMatches);
